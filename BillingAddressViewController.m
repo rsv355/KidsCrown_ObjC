@@ -9,7 +9,6 @@
 #import "BillingAddressViewController.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
-#import "JSONHelper.h"
 #import "UIView+Toast.h"
 #import "KidsCrownUrlSchema.h"
 #import "MyCartTableViewCell.h"
@@ -52,7 +51,6 @@
     
     stateListArray = [[NSMutableArray alloc]init];
    
-    NSLog(@"POJO RESPONSE>>%@",_orderDict);
     
     self.checkboxHeightConst.constant=0.0f;
     [self.btnConfirmOrder setTitle:@"Next" forState:UIControlStateNormal];
@@ -187,11 +185,12 @@
             NSString *city = self.txtCity.text;
             NSString *pincode = self.txtPincode.text;
             NSString *mobileno=self.txtMobileNo.text;
+            NSString *strBiilingId = [[[_orderDict objectForKey:@"Data"] objectForKey:@"billingAddressDC"] objectForKey:@"BillingAddressID"];
             
              NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
             [dict setObject:address1 forKey:@"Address1"];
             [dict setObject:address2 forKey:@"Address2"];
-            [dict setObject:@"0" forKey:@"BillingAddressID"];
+            [dict setObject:strBiilingId forKey:@"BillingAddressID"];
             [dict setObject:city forKey:@"City"];
             [dict setObject:@"1" forKey:@"IsUpdated"];
             [dict setObject:mobileno forKey:@"MobileNo"];
@@ -209,7 +208,6 @@
             
             [temp2 setObject:temp1 forKey:@"Data"];
             
-            NSLog(@"OrderDict >>>>%@",temp2);
      
             
           ShippingAddressViewController  *viewControllwer=[self.storyboard instantiateViewControllerWithIdentifier:@"SHIPPING_ADDRESS"];

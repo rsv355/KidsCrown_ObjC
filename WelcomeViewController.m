@@ -64,12 +64,10 @@
 }
 
 - (void)appplicationIsActive:(NSNotification *)notification {
-    NSLog(@"Application Did Become Active");
     
 }
 
 - (void)applicationEnteredForeground:(NSNotification *)notification {
-    NSLog(@"Application Entered Foreground");
     [self webserivceForVersionCheck];
     
     
@@ -90,16 +88,13 @@
     
     
     NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSLog(@"current version of app is:%@",currentAppVersion);
     
     NSString * deviceType=@"IOS";
     
-    NSLog(@"%@%@%@/%@",NEW_BASE_URL,CHECK_APP_VERSION,currentAppVersion,deviceType);
     
     [manager GET:[NSString stringWithFormat:@"%@%@%@/%@",NEW_BASE_URL,CHECK_APP_VERSION,currentAppVersion,deviceType]  parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSDictionary *dic1 = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        //NSLog(@"dic1 : %@",dic1);
         
         [self fetchDataResponse:dic1];
         
@@ -121,7 +116,6 @@
     NSNumber *number = [NSNumber numberWithInt:i];
     
     
-    NSLog(@" is mendetory>>%@",[[dictionary valueForKey:@"Data"] valueForKey:@"IsMendatory"]);
     
     if([[[dictionary valueForKey:@"Response"] valueForKey:@"ResponseCode"]isEqualToNumber:number])
     {
@@ -177,7 +171,6 @@
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *fetchURL=[NSString stringWithFormat:@"%@%@",NEW_BASE_URL,FETCH_ALL_PRODUCT_DETAIL];
-    NSLog(@"FETCHURL :%@",fetchURL);
     
     [manager GET:fetchURL  parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -216,7 +209,6 @@
     
     AllProductDataArray = [dictionary objectForKey:@"Data"];
     
-    NSLog(@"AllProductDataArray:-> %@",AllProductDataArray);
 }
 
 
@@ -232,12 +224,10 @@
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     NSString *fetchURL=[NSString stringWithFormat:@"%@%@%@",Kids_Crown_BASEURL,FETCH_CURRENT_PRICING_FORMOBILE,@"0"];
-    NSLog(@"FETCHURL :%@",fetchURL);
     
     [manager GET:fetchURL  parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSDictionary *dic1 = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"dic1 : %@",dic1);
         
         [self fetchDataFromResponse:dic1];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -286,12 +276,10 @@
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     NSString *fetchURL=[NSString stringWithFormat:@"%@%@",Kids_Crown_BASEURL,FETCH_DISCOUNT];
-    NSLog(@"FETCHURL :%@",fetchURL);
    
     [manager GET:fetchURL  parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSDictionary *dic1 = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"discountDetail : %@",dic1);
         
         [self fetchDiscountDataFromResponse:dic1];
         
@@ -315,7 +303,6 @@
         NSArray *arrDiscount =[dictionary valueForKey:@"Data"];
         
         NSString *deleteQuery =[NSString stringWithFormat:@"delete from Discount"];
-        NSLog(@"DELETE_QUERY :: %@",deleteQuery);
         [self.dbHandler DeleteDataWithQuesy:deleteQuery];
 
         for (NSDictionary *dict in arrDiscount) {
@@ -372,11 +359,9 @@
         
         if (![data writeToFile:imagePath atomically:NO])
         {
-            ////NSLog((@"Failed to cache image data to disk"));
         }
         else
         {
-            ////NSLog(@"the cachedImagedPath is %@",imagePath);
         }
         NSString *insertQuery = [NSString stringWithFormat:@"insert into ProductImage (path,product_id,product_image_id) values ('%@',%@,%@)",imagePath,[self.productID objectAtIndex:i],[self.proImgID objectAtIndex:i]];
         
@@ -396,7 +381,6 @@
             for (NSDictionary *d in arrlstProductPrice)
             {
                 NSString *insertQuery = [NSString stringWithFormat:@"insert into ProductPrice (product_id,price_id,price,min,max) values (%@,%@,%@,%@,%@)",[d objectForKey:@"ProductID"],[d objectForKey:@"PriceID"],[d objectForKey:@"Price"],[d objectForKey:@"MinQty"],[d objectForKey:@"MaxQty"]];
-                NSLog(@">> %@",insertQuery);
                 [self.dbHandler insertDataWithQuesy:insertQuery];
             }
         }
@@ -634,13 +618,11 @@
     
     if (networkStatus == NotReachable)
     {
-        //NSLog(@"There IS NO internet connection");
         [self.view makeToast:@"Please check Internet connection!"];
     
     }
     else
     {
-        ////NSLog(@"There IS internet connection");
         UIViewController *viewController=[self.storyboard instantiateViewControllerWithIdentifier:@"MENU_DRAWER"];
         [self presentViewController:viewController animated:YES completion:nil];
       

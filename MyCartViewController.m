@@ -124,7 +124,6 @@
     productArr = [self fetchAllProductFromCart];
     
     
-    NSLog(@"--------->>%@",productIdArr);
     [self mergeProductDetails:productArr price:productIdArr];
 
 }
@@ -186,7 +185,6 @@
         }
     }
     
-//    NSLog(@"FINAL ARRAY ------->>%@",productArray);
     
     [self mergeTwoFinalArray];
 }
@@ -216,7 +214,6 @@
             }
         }
     }
-    NSLog(@"FINAL ARRAY ------->>%@",productArr);
     
     [self countSubTotal];
     
@@ -468,10 +465,9 @@
     
     orderArr = [[NSMutableArray alloc] init];
     
-    NSLog(@"ProductID Param ------->>%@",productIdArr);
 
     
-   /* for (NSDictionary *dict in productIdArr)
+    for (NSDictionary *dict in productIdArr)
     {
         
             if ([[dict objectForKey:@"issingle"] isEqualToString:@"1"])
@@ -546,14 +542,13 @@
                                                          error:&error];
     
     if (! jsonData) {
-        NSLog(@"Got an error: %@", error);
+        //NSLog(@"Got an error: %@", error);
     } else {
         NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        NSLog(@"First POJO Request ----->> %@", jsonString);
     }
 
     
-    [self callPlaceOrderService];*/
+    [self callPlaceOrderService];
 }
 
 -(void)callPlaceOrderService {
@@ -565,7 +560,6 @@
     [manager POST:strURL parameters:paramsDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSMutableDictionary *dictionary = responseObject;
-        NSLog(@"First POJO Response:-> %@",dictionary);
         
         if ([[[dictionary objectForKey:@"Response"] valueForKey:@"ResponseCode"] integerValue] == 1)
         {

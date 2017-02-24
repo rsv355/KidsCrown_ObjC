@@ -44,13 +44,11 @@
     
     if (networkStatus == NotReachable)
     {
-        //NSLog(@"There IS NO internet connection");
         [self.view makeToast:@"Please check your Internet Connectivity...!!"];
 
     }
     else
     {
-        ////NSLog(@"There IS internet connection");
         [self FetchProductDataFromWebService];
     }
     
@@ -79,7 +77,6 @@
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     if (networkStatus != NotReachable)
     {
-        //NSLog(@"There IS internet connection");
         
     }
     else

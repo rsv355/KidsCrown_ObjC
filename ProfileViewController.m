@@ -31,7 +31,6 @@
     _txtRegistrationNo.enabled = false;
     
     NSString *currentAppVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-    NSLog(@"current version of app is:%@",currentAppVersion);
 
     
     _txtMobileNo.delegate = self;
@@ -206,7 +205,6 @@
     NSString *regExPattern = @"^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$";
     NSRegularExpression *regEx = [[NSRegularExpression alloc] initWithPattern:regExPattern options:NSRegularExpressionCaseInsensitive error:nil];
     NSUInteger regExMatches = [regEx numberOfMatchesInString:emailString options:0 range:NSMakeRange(0, [emailString length])];
-    ////NSLog(@"%lu", (unsigned long)regExMatches);
     if (regExMatches == 0){
         return NO;
     }
@@ -225,15 +223,12 @@
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     
     
-    //NSLog(@"FETCHURL :%@",[NSString stringWithFormat:FETCHUSER,userId]);
     // NSString *str=[NSString stringWithFormat:FETCHUSERDETAILS,email,socialName];
     
-    NSLog(@"%@%@%@",NEW_BASE_URL,FETCH_PROFILE_DETAIL,userId);
     
     [manager GET:[NSString stringWithFormat:@"%@%@%@",NEW_BASE_URL,FETCH_PROFILE_DETAIL,userId]  parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSDictionary *dic1 = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        //NSLog(@"dic1 : %@",dic1);
         
         [self fetchDataResponse:dic1];
         
@@ -260,7 +255,6 @@
     float j = 1;
     NSNumber *no2 = [NSNumber numberWithFloat:j];
     
-    NSLog(@"%@",[[dictionary valueForKey:@"Response"] valueForKey:@"ResponseCode"]);
     
     if([[[dictionary valueForKey:@"Response"] valueForKey:@"ResponseCode"]isEqualToNumber:no2])   //([dictionary valueForKey:@"Data"])
     {
@@ -391,17 +385,14 @@
             
             manager.requestSerializer = [AFJSONRequestSerializer serializer]; // if request JSON format
             [manager POST:[NSString stringWithFormat:@"%@%@",NEW_BASE_URL,UPDATE_PROFILE_DETAIL] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                // //NSLog(@"RESPONSE: %@", responseObject);
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 
                 NSDictionary *dic1 = responseObject;
-                //NSLog(@"dic1 : %@",dic1);
                 [self response:dic1];
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
                 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 
-                // //NSLog(@"ERROR: %@", error);
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
                 
                 [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

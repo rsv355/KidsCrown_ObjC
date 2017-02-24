@@ -25,8 +25,7 @@
     
  // GET DEVICE ID
     NSString* Identifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    NSLog(@"UDID Is-> : %@", Identifier);
-    NSLog(@"UserId:-> %@",[[NSUserDefaults standardUserDefaults] valueForKey:@"userID"]);
+   
     
     [[NSUserDefaults standardUserDefaults]setObject:Identifier forKey:@"UDID"];
     
@@ -128,13 +127,12 @@
         
         [[NSUserDefaults standardUserDefaults]setObject:deviceTokenString forKey:@"deviceToken"];
         [[NSUserDefaults standardUserDefaults]synchronize];
-        NSLog(@"This is device token %@",deviceTokenString);
         [[NSUserDefaults standardUserDefaults] setObject:deviceTokenString forKey:@"Device_Token"];
         
 }
 -(void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err
     {
-        NSLog(@"Error %@",err);
+//        NSLog(@"Error %@",err);
     }
     
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {

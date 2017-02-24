@@ -53,13 +53,6 @@
 - (IBAction)btnBack:(id)sender
 {
     
-    NSString *strDeleteCrown = [NSString stringWithFormat:@"delete from Crownkit"];
-    
-    [self.dbHandler DeleteDataWithQuesy:strDeleteCrown];
-    
-    NSString *strDeleteKit = [NSString stringWithFormat:@"delete from CartItem"];
-    
-    [self.dbHandler DeleteDataWithQuesy:strDeleteKit];
     
     
     UIViewController *viewController=[self.storyboard instantiateViewControllerWithIdentifier:@"MENU_DRAWER"];

@@ -47,7 +47,6 @@
     }
     
     
-//    NSLog(@"StoryBoard ID for subcontent is %@",storyboardID);
     
     [self.mainContentNavigationController setNavigationRoot:storyboardID];
  

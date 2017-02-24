@@ -42,13 +42,10 @@
     // Do any additional setup after loading the view.
     arr=[[NSArray alloc]initWithObjects:@"",@"",@"",@"",@"", nil];
     
-    NSLog(@"ORdeID--->> %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"orderId"]);
     
-    NSLog(@"OrderDetailDict:-> %@",_orderDetailDict);
     
     nameArray = [_orderDetailDict objectForKey:@"lstOrderProduct"];
     
-    NSLog(@"NameAray:-> %@",nameArray);
     
     [self DisplayData];
     

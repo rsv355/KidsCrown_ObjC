@@ -17,7 +17,6 @@
 #import "KidsCrownUrlSchema.h"
 #import "UIView+Toast.h"
 #import "Reachability.h"
-#import "JSONHelper.h"
 
 static NSString * const kClientId = @"965550713375-08qf2a21r68gh0jqgjbv6o48lvqlm86h.apps.googleusercontent.com";
 
@@ -318,7 +317,6 @@ static NSString * const kClientId = @"965550713375-08qf2a21r68gh0jqgjbv6o48lvqlm
         [manager POST:strURL parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             
             NSDictionary *dictionary = responseObject;
-            NSLog(@"Dictionary:-> %@",dictionary);
             
             if ([[[dictionary objectForKey:@"Response"] valueForKey:@"ResponseCode"] integerValue] == 1)
             {

@@ -12,8 +12,8 @@
 #import "UIView+Toast.h"
 #import "MBProgressHUD.h"
 #import "KidsCrownUrlSchema.h"
-#import "JSONHelper.h"
 #import "OrderConformationViewController.h"
+#import "Reachability.h"
 
 @interface OrderSendConfirmationViewController ()
 {
@@ -106,7 +106,6 @@
             }
     }
     
-    NSLog(@"TotalArray - > %@",TotalDataArray);
     
      [self DisplayDataFromPOJO];
 }
@@ -224,54 +223,82 @@
 #pragma mark  - Button Action
 - (IBAction)btnPlaceOrder:(id)sender {
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+            Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+        NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     
-        NSMutableDictionary *parameterDictionary = [_orderDict objectForKey:@"Data"];
-        [parameterDictionary setObject:@"I" forKey:@"MobileOS"];
-        [parameterDictionary removeObjectForKey:@"placeOrderSuccessDetailsDC"];
-        [parameterDictionary setObject:_orderArr forKey:@"placeOrderProductDC"];
-
-        NSLog(@"FINAL POJO @:-> %@",parameterDictionary);
-    
-    
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
-    NSString *strURL = [NSString stringWithFormat:@"%@%@",NEW_BASE_URL,NEW_PLACE_ORDER];
-    [manager POST:strURL parameters:parameterDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        NSMutableDictionary *dictionary = responseObject;
-        NSLog(@"FINAL POJO RESPONSE:-> %@",dictionary);
-        
-        if ([[[dictionary objectForKey:@"Response"] valueForKey:@"ResponseCode"] integerValue] == 1)
+        if (networkStatus == NotReachable)
         {
-            [self ParseDataResponse:dictionary];
-            
+            [self.view makeToast:@"Please check your Internet Connectivity...!!"];
+        
         }
         else
         {
-            NSString *strMsg = [[dictionary objectForKey:@"Response"]valueForKey:@"ResponseMsg"];
-            [self.view makeToast:strMsg];
-        }
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        
-        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [self.view makeToast:@"Network Error...!!"];
-    }];
+            
+            
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            
+            
+            NSMutableDictionary *parameterDictionary = [_orderDict objectForKey:@"Data"];
+            [parameterDictionary setObject:@"I" forKey:@"MobileOS"];
+            [parameterDictionary removeObjectForKey:@"placeOrderSuccessDetailsDC"];
+            [parameterDictionary setObject:_orderArr forKey:@"placeOrderProductDC"];
+            
+            
+            
+            AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+            [manager.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            manager.requestSerializer = [AFJSONRequestSerializer serializer];
+            
+            NSString *strURL = [NSString stringWithFormat:@"%@%@",NEW_BASE_URL,NEW_PLACE_ORDER];
+            [manager POST:strURL parameters:parameterDictionary success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSMutableDictionary *dictionary = responseObject;
+                
+                if ([[[dictionary objectForKey:@"Response"] valueForKey:@"ResponseCode"] integerValue] == 1)
+                {
+                    [self ParseDataResponse:dictionary];
+                    
+                }
+                else
+                {
+                    NSString *strMsg = [[dictionary objectForKey:@"Response"]valueForKey:@"ResponseMsg"];
+                    [self.view makeToast:strMsg];
+                }
+                
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                
+                
+                [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+                
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                [self.view makeToast:@"Network Error...!!"];
+            }];
 
+            
+            
+        }
+
+   
     
     
 }
 
 - (void)ParseDataResponse:(NSMutableDictionary*)dictionary {
+    
+    
+    NSString *strDeleteCrown = [NSString stringWithFormat:@"delete from Crownkit"];
+    
+    [self.dbHandler DeleteDataWithQuesy:strDeleteCrown];
+    
+    NSString *strDeleteKit = [NSString stringWithFormat:@"delete from CartItem"];
+    
+    [self.dbHandler DeleteDataWithQuesy:strDeleteKit];
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"CART_COUNT"];
+    
+    
     
     OrderConformationViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ORDER_CONFIRMATION"];
     

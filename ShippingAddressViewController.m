@@ -9,7 +9,6 @@
 #import "ShippingAddressViewController.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD.h"
-#import "JSONHelper.h"
 #import "UIView+Toast.h"
 #import "KidsCrownUrlSchema.h"
 #import "MyCartTableViewCell.h"
@@ -234,11 +233,12 @@
         NSString *city = self.txtCity.text;
         NSString *pincode = self.txtPincode.text;
         NSString *mobileno=self.txtMobileNo.text;
+        NSString *strShippingId = [[[_orderDict objectForKey:@"Data"] objectForKey:@"shippingAddressDC"] objectForKey:@"ShippingAddressID"];
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         [dict setObject:address1 forKey:@"Address1"];
         [dict setObject:address2 forKey:@"Address2"];
-        [dict setObject:@"0" forKey:@"BillingAddressID"];
+        [dict setObject:strShippingId forKey:@"ShippingAddressID"];
         [dict setObject:city forKey:@"City"];
         [dict setObject:@"1" forKey:@"IsUpdated"];
         [dict setObject:mobileno forKey:@"MobileNo"];
@@ -256,7 +256,6 @@
         
         [temp2 setObject:temp1 forKey:@"Data"];
         
-        NSLog(@"OrderDict >>>>%@",temp2);
         
 
         OrderSendConfirmationViewController  *viewControllwer=[self.storyboard instantiateViewControllerWithIdentifier:@"ORDER_SEND_CONFIRMATION"];

@@ -10,6 +10,7 @@
 #import "MenuRow.h"
 #import "DataBaseFile.h"
 
+
 @implementation MenuTableViewController 
 {
     NSUserDefaults *defaults;
@@ -90,7 +91,6 @@
     }
     else
     {
-//        NSLog(@"controller at %ld is %@",(long)indexPath.row, [menuItemIdentifire objectAtIndex:indexPath.row]);
         //[defaults setObject:[menuItems objectAtIndex:indexPath.row] forKey:@"setTitle"];
         //[defaults setObject:@"1" forKey:@"drawerStatus"];
         [self.menuDrawerViewController setContent:[menuItemIdentifire objectAtIndex:indexPath.row]];

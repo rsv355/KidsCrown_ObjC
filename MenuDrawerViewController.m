@@ -9,8 +9,10 @@
 #import "MenuDrawerViewController.h"
 #import "ParentViewController.h"
 #import "DataBaseFile.h"
+#import <MessageUI/MessageUI.h>
+#import "UIView+Toast.h"
 
-@interface MenuDrawerViewController (){
+@interface MenuDrawerViewController ()<MFMailComposeViewControllerDelegate>{
     ParentViewController *parentViewController;
 }
 
@@ -41,31 +43,66 @@
 
 
 -(void)setContent:(NSString *)storyboardID{
-//    NSLog(@"StoryBoard ID for container is %@",storyboardID);
     [parentViewController setSubContent:storyboardID];
     [self closeDrawer];
 }
 -(void)shareMyFeedback:(NSString *)strFeedback
 {
-    NSString *textToShare = @"We all are great!!";
+   /* NSString *textToShare = @"We all are great!!";
     NSURL *myWebsite = [NSURL URLWithString:@"https://www.google.co.in/search?q=hulk+images&espv=2&biw=646&bih=399&tbm=isch&imgil=v4x83FyqO5-lZM%253A%253BYLEpIzVFYf4cKM%253Bhttp%25253A%25252F%25252Fweknowyourdreamz.com%25252Fhulk.html&source=iu&pf=m&fir=v4x83FyqO5-lZM%253A%252CYLEpIzVFYf4cKM%252C_&usg=__ESBmc5HRSIiD3EZ_H9JXHN2Yftw%3D&ved=0ahUKEwjvzPHTjv_LAhUOWY4KHWfeAgMQyjcIOA&ei=t60HV6-VO46yuQTnvIsY"];
     
     NSArray *objectsToShare = @[textToShare, myWebsite];
     
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
     
-    NSArray *excludeActivities = @[UIActivityTypeAirDrop,
-                                   UIActivityTypePrint,
-                                   UIActivityTypeAssignToContact,
-                                   UIActivityTypeSaveToCameraRoll,
-                                   UIActivityTypeAddToReadingList,
-                                   UIActivityTypePostToFlickr,
-                                   UIActivityTypePostToVimeo,UIActivityTypeMail,UIActivityTypeMessage,UIActivityTypePostToTwitter];
+    NSArray *excludeActivities = @[UIActivityTypeMail];
     
     activityVC.excludedActivityTypes = excludeActivities;
     
     [self presentViewController:activityVC animated:YES completion:nil];
+    */
     
+    if ([MFMailComposeViewController canSendMail])
+    {
+        MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
+        controller.mailComposeDelegate = self;
+        [controller setSubject:@"KidsCrown Feedback"];
+        [controller setToRecipients:[NSArray arrayWithObjects:@"kids@crown.com",nil]];
+       
+        [self presentViewController:controller animated:YES completion:NULL];
+    }
+    else{
+        UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"KidsCrown" message:@"You can not send mail.." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil] ;
+        [alert show];
+    }
+    
+}
+-(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            [self.view makeToast:@"Email Cancelled."];
+            break;
+        case MFMailComposeResultSaved:
+            [self.view makeToast:@"Email Saved."];
+
+            break;
+        case MFMailComposeResultSent:
+            [self.view makeToast:@"Email Sent."];
+
+            
+            break;
+        case MFMailComposeResultFailed:
+            [self.view makeToast:@"Email Failed."];
+
+            break;
+        default:
+            [self.view makeToast:@"Email Not Sent."];
+
+            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 -(void)setMainContainer{

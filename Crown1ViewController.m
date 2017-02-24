@@ -43,7 +43,6 @@
     
     _subviewOfHeaderLabel.backgroundColor = _colorcode;
     
-    NSLog(@"ProductDetailArray:- >> %@",_productDetailArray);
     
     [self displayData];
     
@@ -237,7 +236,6 @@
             
             [self.lblBadgeCount setText:[NSString stringWithFormat:@"%ld",[cartCountArr count]]];
             
-            NSLog(@"UPDATE CART COUNT ----->>%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"CART_COUNT"]);
 
         }
         
@@ -245,7 +243,21 @@
     }
     else {
         
-        [self.lblBadgeCount setHidden:YES];
+         NSArray *cartCountArr = [[NSUserDefaults standardUserDefaults] objectForKey:@"CART_COUNT"];
+        
+       
+        if ([cartCountArr count] == 0) {
+            
+            [self.lblBadgeCount setHidden:YES];
+        }
+        else {
+            
+            [self.lblBadgeCount setHidden:NO];
+            
+            [self.lblBadgeCount setText:[NSString stringWithFormat:@"%ld",[cartCountArr count]]];
+            
+        }
+
     }
    
 }
@@ -258,22 +270,32 @@
         
         NSArray *array = [[NSUserDefaults standardUserDefaults] objectForKey:@"CART_COUNT"];
         
-        NSMutableArray *cartCountArr = [NSMutableArray arrayWithArray:array];
-        
-        for (NSString *strID in array) {
+        if ([array count]>0) {
             
-            if(![strID isEqualToString:[NSString stringWithFormat:@"%@",productId]]) {
+            NSMutableArray *cartCountArr = [NSMutableArray arrayWithArray:array];
+            
+            for (NSString *strID in array) {
                 
-                [cartCountArr addObject:[NSString stringWithFormat:@"%@",productId]];
-                
+                if(![strID isEqualToString:[NSString stringWithFormat:@"%@",productId]]) {
+                    
+                    [cartCountArr addObject:[NSString stringWithFormat:@"%@",productId]];
+                    
+                }
             }
+            NSOrderedSet *mySet = [[NSOrderedSet alloc] initWithArray:cartCountArr];
+            NSMutableArray *myArray = [[NSMutableArray alloc] initWithArray:[mySet array]];
+            
+            NSArray *array1 = [NSArray arrayWithArray:myArray];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:array1 forKey:@"CART_COUNT"];
         }
-        NSOrderedSet *mySet = [[NSOrderedSet alloc] initWithArray:cartCountArr];
-        NSMutableArray *myArray = [[NSMutableArray alloc] initWithArray:[mySet array]];
-       
-        NSArray *array1 = [NSArray arrayWithArray:myArray];
         
-        [[NSUserDefaults standardUserDefaults] setObject:array1 forKey:@"CART_COUNT"];
+        else {
+            NSMutableArray *cartCountArr = [[NSMutableArray alloc] init];
+            
+            [cartCountArr addObject:[NSString stringWithFormat:@"%@",productId]];
+            [[NSUserDefaults standardUserDefaults] setObject:cartCountArr forKey:@"CART_COUNT"];
+        }
     }
     else {
         
@@ -285,7 +307,6 @@
     
     [self setBadgeLabel];
     
-    NSLog(@"CART COUNT ----->>%@",[[NSUserDefaults standardUserDefaults] objectForKey:@"CART_COUNT"]);
 }
 
 -(void)textChange:(UITextField *)textfield{
@@ -322,7 +343,6 @@
 
 - (IBAction)stepperValueChange:(id)sender {
     
-     NSLog(@"--->> Stepper Value:-> %@", [sender currentTitle]);
     
     qtyValue = [[sender currentTitle]intValue];
     

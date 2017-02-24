@@ -32,7 +32,6 @@
 }
 
 -(void)setNavigationRoot:(NSString *)storyBoardID{
-//    NSLog(@"Setting navigation root here %@",storyBoardID);
     
     
     //Uncomment following code if conditional coding is required.Following the if else ladder is sample code to implement
